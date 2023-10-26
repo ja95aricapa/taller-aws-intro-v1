@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECS Docker Application</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        header {
+            background: #50a3a2;
+            color: white;
+            padding-top: 30px;
+            min-height: 70px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        header a {
+            color: #333;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 16px;
+        }
+        header ul {
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+            color: #ffffff;
+        }
+        header li {
+            float: left;
+            display: inline;
+            padding: 0 20px 0 20px;
+        }
+        header #branding {
+            display: inline;
+        }
+        header #branding h1 {
+            margin: 0;
+        }
+        header nav {
+            float: right;
+            margin-top: 10px;
+        }
+        header .highlight, header .current a {
+            font-weight: bold;
+            color: #e8491d;
+            padding: 0;
+        }
+        header a {
+            color: #ffffff;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 16px;
+        }
+        .main {
+            padding: 30px 0;
+        }
+        .main h2 {
+            color: #333;
+        }
+        .main p {
+            font-size: 18px;
+            line-height: 1.6em;
+        }
+        footer {
+            padding: 20px 0;
+            background: #333;
+            color: white;
+            text-align: center;
+        }
+        footer p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <div id="branding">
+                <h1><span class="highlight">Docker</span> Application</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li class="current"><a href="index.html">Home</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="main">
+        <div class="container">
+            <h2>About This New Application</h2>
+            <p>This Docker container is running on Amazon ECS. Below you can find the container's metadata:</p>
+            <pre id="metadata"></pre>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2023 Docker Application</p>
+    </footer>
+
+    <script>
+        fetch('/metadata')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('metadata').textContent = JSON.stringify(data, null, 2);
+            })
+            .catch(error => console.error('Error fetching metadata:', error));
+    </script>
+
+</body>
+</html>

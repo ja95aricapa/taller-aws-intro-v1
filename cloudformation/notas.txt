@@ -1,0 +1,165 @@
+# s3
+
+name bucket: bucket-codigo-cloudformation
+dejar en la raiz cloudformation.zip
+
+
+# build
+
+aws cloudformation package \                                                             1m 11s 10:37:40 PM
+    --template-file template.yaml \         
+    --s3-bucket bucket-codigo-cloudformation \
+    --output-template-file packaged-template.yaml \
+    --region sa-east-1
+
+# deploy
+
+aws cloudformation deploy \                                                                     10:53:40 PM
+    --template-file packaged-template.yaml \
+    --stack-name conaset-api-example \        
+    --capabilities CAPABILITY_IAM \                
+    --region sa-east-1
+
+**** get token:
+
+{
+  "resource": "/clave-unica/token",
+  "path": "/clave-unica/token",
+  "httpMethod": "POST",
+  "headers": null,
+  "multiValueHeaders": null,
+  "queryStringParameters": null,
+  "multiValueQueryStringParameters": null,
+  "pathParameters": null,
+  "stageVariables": null,
+  "requestContext": {
+    "resourceId": "3nalay",
+    "resourcePath": "/clave-unica/token",
+    "httpMethod": "POST",
+    "extendedRequestId": "NHkYPFWjmjQFWnA=",
+    "requestTime": "20/Oct/2023:20:47:35 +0000",
+    "path": "/clave-unica/token",
+    "accountId": "044776073000",
+    "protocol": "HTTP/1.1",
+    "stage": "test-invoke-stage",
+    "domainPrefix": "testPrefix",
+    "requestTimeEpoch": 1697834855679,
+    "requestId": "aba21346-3e17-4f95-b3c4-484c043c08a6",
+    "identity": {
+      "cognitoIdentityPoolId": null,
+      "cognitoIdentityId": null,
+      "apiKey": "test-invoke-api-key",
+      "principalOrgId": null,
+      "cognitoAuthenticationType": null,
+      "userArn": "arn:aws:iam::044776073000:user/jaricapa",
+      "apiKeyId": "test-invoke-api-key-id",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36 Edg/118.0.2088.46",
+      "accountId": "044776073000",
+      "caller": "AIDAQU3G4U4UHPBNQ3O55",
+      "sourceIp": "test-invoke-source-ip",
+      "accessKey": "ASIAQU3G4U4UJWZXZKNX",
+      "cognitoAuthenticationProvider": null,
+      "user": "AIDAQU3G4U4UHPBNQ3O55"
+    },
+    "domainName": "testPrefix.testDomainName",
+    "apiId": "eqftw4n28j"
+  },
+  "body": "{\n  \"code\": \"asdf\",\n  \"state\": \"qwer\"\n}",
+  "isBase64Encoded": false
+}
+
+**** get data:
+
+{
+  "resource": "/clave-unica/user-info",
+  "path": "/clave-unica/user-info",
+  "httpMethod": "POST",
+  "headers": null,
+  "multiValueHeaders": null,
+  "queryStringParameters": null,
+  "multiValueQueryStringParameters": null,
+  "pathParameters": null,
+  "stageVariables": null,
+  "requestContext": {
+    "resourceId": "eewwzw",
+    "resourcePath": "/clave-unica/user-info",
+    "httpMethod": "POST",
+    "extendedRequestId": "NUQaBHcGmjQFtOQ=",
+    "requestTime": "24/Oct/2023:17:11:02 +0000",
+    "path": "/clave-unica/user-info",
+    "accountId": "044776073000",
+    "protocol": "HTTP/1.1",
+    "stage": "test-invoke-stage",
+    "domainPrefix": "testPrefix",
+    "requestTimeEpoch": 1698167462241,
+    "requestId": "9111f218-0122-4446-9e02-27a035bb0f4e",
+    "identity": {
+      "cognitoIdentityPoolId": null,
+      "cognitoIdentityId": null,
+      "apiKey": "test-invoke-api-key",
+      "principalOrgId": null,
+      "cognitoAuthenticationType": null,
+      "userArn": "arn:aws:iam::044776073000:user/jaricapa",
+      "apiKeyId": "test-invoke-api-key-id",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36 Edg/118.0.2088.61",
+      "accountId": "044776073000",
+      "caller": "AIDAQU3G4U4UHPBNQ3O55",
+      "sourceIp": "test-invoke-source-ip",
+      "accessKey": "ASIAQU3G4U4UB74VEQWC",
+      "cognitoAuthenticationProvider": null,
+      "user": "AIDAQU3G4U4UHPBNQ3O55"
+    },
+    "domainName": "testPrefix.testDomainName",
+    "apiId": "3neszghw8k"
+  },
+  "body": "{\n    \"token\":\"a-single-token\"\n}",
+  "isBase64Encoded": false
+}
+
+**** refresh token:
+
+{
+  "resource": "/clave-unica/user-info",
+  "path": "/clave-unica/user-info",
+  "httpMethod": "POST",
+  "headers": null,
+  "multiValueHeaders": null,
+  "queryStringParameters": null,
+  "multiValueQueryStringParameters": null,
+  "pathParameters": null,
+  "stageVariables": null,
+  "requestContext": {
+    "resourceId": "eewwzw",
+    "resourcePath": "/clave-unica/user-info",
+    "httpMethod": "POST",
+    "extendedRequestId": "NUQaBHcGmjQFtOQ=",
+    "requestTime": "24/Oct/2023:17:11:02 +0000",
+    "path": "/clave-unica/user-info",
+    "accountId": "044776073000",
+    "protocol": "HTTP/1.1",
+    "stage": "test-invoke-stage",
+    "domainPrefix": "testPrefix",
+    "requestTimeEpoch": 1698167462241,
+    "requestId": "9111f218-0122-4446-9e02-27a035bb0f4e",
+    "identity": {
+      "cognitoIdentityPoolId": null,
+      "cognitoIdentityId": null,
+      "apiKey": "test-invoke-api-key",
+      "principalOrgId": null,
+      "cognitoAuthenticationType": null,
+      "userArn": "arn:aws:iam::044776073000:user/jaricapa",
+      "apiKeyId": "test-invoke-api-key-id",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36 Edg/118.0.2088.61",
+      "accountId": "044776073000",
+      "caller": "AIDAQU3G4U4UHPBNQ3O55",
+      "sourceIp": "test-invoke-source-ip",
+      "accessKey": "ASIAQU3G4U4UB74VEQWC",
+      "cognitoAuthenticationProvider": null,
+      "user": "AIDAQU3G4U4UHPBNQ3O55"
+    },
+    "domainName": "testPrefix.testDomainName",
+    "apiId": "3neszghw8k"
+  },
+  "body": "{\n    \"token\":\"a-single-token\"\n}",
+  "isBase64Encoded": false
+}

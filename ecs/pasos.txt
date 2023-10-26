@@ -1,0 +1,51 @@
+*** Paso 1: Crear un Repositorio en Amazon Elastic Container Registry (ECR)
+
+Accede a la consola de Amazon.
+Ve a la sección de ECR.
+Crea un nuevo repositorio, dándole un nombre, por ejemplo, "test-ecs".
+
+*** Paso 2: Configurar las Opciones del Repositorio ECR
+
+Activa la opción "Tags inmutables" para evitar sobrescribir etiquetas accidentalmente.
+Habilita el escaneo de imágenes para buscar vulnerabilidades en las imágenes de Docker.
+Considera la opción de encriptar las imágenes con AWS Key Management Service (KMS) si es necesario.
+
+*** Paso 3: Subir una Imagen Docker al Repositorio ECR
+
+Descarga la última versión de la imagen Docker que deseas subir.
+Ejecuta el comando de inicio de sesión de Docker en la consola utilizando tus credenciales de AWS.
+Etiqueta la imagen con el nombre de tu repositorio ECR y una etiqueta específica, por ejemplo, "test-ecs:v1".
+Ejecuta el comando docker push para subir la imagen al repositorio ECR.
+
+*** Paso 4: Crear un Cluster de Amazon ECS
+
+Accede a la sección ECS en la consola de AWS.
+Crea un nuevo clúster ECS, proporcionando un nombre y seleccionando una VPC y subredes para el clúster.
+
+*** Paso 5: Crear una Definición de Tarea
+
+En la sección de definiciones de tarea, crea una nueva definición de tarea que incluya el nombre de la tarea y la imagen de contenedor que deseas ejecutar.
+Especifica las opciones de CPU, memoria y roles de IAM según sea necesario.
+
+*** Paso 6: Desplegar un Servicio en el Cluster de ECS
+
+Despliega un nuevo servicio en el clúster de ECS, utilizando la definición de tarea creada en el paso anterior.
+Configura las opciones de red y seguridad del servicio según tus necesidades.
+
+*** Paso 7: Acceder a la Aplicación Desplegada
+
+Encuentra la dirección IP pública o el nombre de dominio de la aplicación desplegada en el servicio.
+Asegúrate de que las reglas de seguridad del grupo incluyan una entrada para permitir el tráfico en el puerto necesario (por ejemplo, puerto 80).
+si no existe, crear por lo pronto una regla que permita todo el trafico entrante desde afuera por el puerto 80
+
+*** Paso 8: Actualizar la Aplicación
+
+Si deseas actualizar la aplicación, crea una nueva versión de la imagen Docker.
+Etiqueta la nueva imagen con una etiqueta diferente (por ejemplo, "test-ecs:v2").
+Actualiza la definición de tarea para usar la nueva etiqueta de imagen.
+Actualiza el servicio para utilizar la nueva definición de tarea.
+
+*** Paso 9: Verificar la Actualización
+
+Verifica que la nueva versión de la aplicación esté funcionando correctamente.
+Asegúrate de que las reglas de seguridad del grupo sigan permitiendo el tráfico en el puerto necesario.

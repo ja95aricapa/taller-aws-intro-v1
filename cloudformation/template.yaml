@@ -1,0 +1,169 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Descripción del microservicio de login para el proyecto conaser-nexteo-be-login
+
+Parameters:
+  ClientId:
+    Type: String
+    Default: "4a7148d0a36a43a6bbb4a94f8a27b740"
+  ClientSecret:
+    Type: String
+    Default: "911bd61863b24c0086f5f14f5b1871f1"
+  RedirectUri:
+    Type: String
+    Default: "http://localhost:3000/auth/callback"
+  LogoutUri:
+    Type: String
+    Default: "http://localhost:3000/auth/logout"
+  ClaveUnicaTokenUrl:
+    Type: String
+    Default: "https://accounts.claveunica.gob.cl/openid/token"
+  ClaveUnicaUserInfoUrl:
+    Type: String
+    Default: "https://accounts.claveunica.gob.cl/openid/userinfo"
+
+Resources:
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: LambdaBasicExecution
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: "*"
+
+  GetTokenLambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: cloudformation/src/lambdas/get-token/handler.handler
+      Role:
+        Fn::GetAtt:
+          - LambdaExecutionRole
+          - Arn
+      Code:
+        S3Bucket: bucket-codigo-cloudformation # Corregido aquí
+        S3Key: cloudformation.zip
+      Runtime: nodejs18.x
+      Environment:
+        Variables:
+          CLIENT_ID: !Ref ClientId
+          CLIENT_SECRET: !Ref ClientSecret
+          REDIRECT_URI: !Ref RedirectUri
+          LOGOUT_URI: !Ref LogoutUri
+          CLAVE_UNICA_TOKEN_URL: !Ref ClaveUnicaTokenUrl
+          CLAVE_UNICA_USER_INFO_URL: !Ref ClaveUnicaUserInfoUrl
+
+  GetUserDataLambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: cloudformation/src/lambdas/get-user-data/handler.handler
+      Role:
+        Fn::GetAtt:
+          - LambdaExecutionRole
+          - Arn
+      Code:
+        S3Bucket: bucket-codigo-cloudformation # Corregido aquí
+        S3Key: cloudformation.zip
+      Runtime: nodejs18.x
+      Environment:
+        Variables:
+          CLIENT_ID: !Ref ClientId
+          CLIENT_SECRET: !Ref ClientSecret
+          REDIRECT_URI: !Ref RedirectUri
+          LOGOUT_URI: !Ref LogoutUri
+          CLAVE_UNICA_TOKEN_URL: !Ref ClaveUnicaTokenUrl
+          CLAVE_UNICA_USER_INFO_URL: !Ref ClaveUnicaUserInfoUrl
+
+  RefreshTokenLambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: cloudformation/src/lambdas/refresh-token/handler.handler
+      Role:
+        Fn::GetAtt:
+          - LambdaExecutionRole
+          - Arn
+      Code:
+        S3Bucket: bucket-codigo-cloudformation # Corregido aquí
+        S3Key: cloudformation.zip
+      Runtime: nodejs18.x
+      Environment:
+        Variables:
+          CLIENT_ID: !Ref ClientId
+          CLIENT_SECRET: !Ref ClientSecret
+          REDIRECT_URI: !Ref RedirectUri
+          LOGOUT_URI: !Ref LogoutUri
+          CLAVE_UNICA_TOKEN_URL: !Ref ClaveUnicaTokenUrl
+          CLAVE_UNICA_USER_INFO_URL: !Ref ClaveUnicaUserInfoUrl
+
+  GetTokenLambdaApiGatewayInvoke:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref GetTokenLambdaFunction
+      Principal: apigateway.amazonaws.com
+
+  GetUserDataLambdaApiGatewayInvoke:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref GetUserDataLambdaFunction
+      Principal: apigateway.amazonaws.com
+
+  RefreshTokenLambdaApiGatewayInvoke:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref RefreshTokenLambdaFunction
+      Principal: apigateway.amazonaws.com
+
+  ConasetAPILogin:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: "CONASET NEXTEO API LOGIN V1"
+      FailOnWarnings: "true"
+      Body:
+        swagger: "2.0"
+        info:
+          title: CONASET NEXTEO API LOGIN V1
+        paths:
+          /clave-unica/token:
+            post:
+              x-amazon-apigateway-integration:
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetTokenLambdaFunction.Arn}/invocations
+                httpMethod: POST
+                type: aws_proxy
+          /clave-unica/user-info:
+            post:
+              x-amazon-apigateway-integration:
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetUserDataLambdaFunction.Arn}/invocations
+                httpMethod: POST
+                type: aws_proxy
+          /clave-unica/token/refresh:
+            post:
+              x-amazon-apigateway-integration:
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${RefreshTokenLambdaFunction.Arn}/invocations
+                httpMethod: POST
+                type: aws_proxy
+
+Outputs:
+  ApiGatewayRestApiUrl:
+    Description: "URL de la API de API Gateway"
+    Value:
+      Fn::Sub: "https://${ConasetAPILogin}.execute-api.${AWS::Region}.amazonaws.com/DEV"
